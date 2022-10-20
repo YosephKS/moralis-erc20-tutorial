@@ -1,13 +1,32 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { WagmiConfig, createClient, configureChains, chain } from "wagmi";
+import { publicProvider } from "wagmi/providers/public";
+import "@rainbow-me/rainbowkit/styles.css";
+import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const { chains, provider, webSocketProvider } = configureChains(
+  [chain.goerli],
+  [publicProvider()]
+);
+
+const client = createClient({
+  autoConnect: true,
+  provider,
+  webSocketProvider,
+});
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <WagmiConfig client={client}>
+      <RainbowKitProvider chains={chains}>
+        <App />
+      </RainbowKitProvider>
+    </WagmiConfig>
   </React.StrictMode>
 );
 
